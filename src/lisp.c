@@ -56,9 +56,10 @@ Value* environment_lookup(List* environment, char* name)
 	    return current_binding->value;
 	current = current->next;
     }
-    char* errorstring = (char*)malloc(sizeof(char) * (strlen(name) + 30));
-    strcpy(errorstring, "unbound variable ");
-    strcpy(errorstring + strlen(errorstring), name);
+    size_t errorsize = sizeof(char) * (strlen(name) + 30);
+    char* errorstring = (char*)malloc(errorsize);
+    strcpy_s(errorstring, errorsize, "unbound variable ");
+    strcat_s(errorstring, errorsize, name);
     return alloc_value(TYPE_ERROR, errorstring);
 }
 
@@ -203,6 +204,8 @@ Value* eval(Value* expression, List* environment)
 	else 
 	    return alloc_value(TYPE_ERROR, "first element of list not operator or procedure");
     }
+    else
+	return alloc_value(TYPE_ERROR, "not one of the allowed types?");
 }
 
 void test_repl()
@@ -210,19 +213,22 @@ void test_repl()
     char expression[8000];
     List* env = setup_environment();
     Value* result;
+#if 1
+    FILE* file;
 
-    FILE* file = fopen("stdlib.lisp", "r");
-    fseek(file, 0, SEEK_END);
-    int size = ftell(file);
-    rewind(file);
-    fread(expression, 1, size, file);
-    expression[size] = 0;
-    strip_spaces(expression);
-    result = eval(parse_string(expression), env);
-    
+    fopen_s(&file, "stdlib.lisp", "r");
+    if (file != NULL)
+    {
+	size_t size = fread_s(expression, 8000, 1, 8000, file);
+	expression[size] = 0;
+	strip_spaces(expression);
+	result = eval(parse_string(expression), env);
+    }
+#endif
+
     while(1) {
 	printf("LISP> ");
-	if (!strcmp(fgets(expression, sizeof(expression), stdin), "QUIT\n")) break;
+	if (!_stricmp(fgets(expression, sizeof(expression), stdin), "QUIT\n")) break;
 	expression[strlen(expression) - 1] = 0;
 	strip_spaces(expression);
 	result = eval(parse_string(expression), env);

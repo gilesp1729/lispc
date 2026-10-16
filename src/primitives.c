@@ -157,7 +157,7 @@ Value* primitive_first(List* arguments)
     Value* arg = arguments->first->value;
 
     if (arg->type != TYPE_LIST)
-	alloc_value(TYPE_ERROR, "expects list");
+	return alloc_value(TYPE_ERROR, "expects list");
     else {
 	List* lst = (List*)arg->data;
 	if (lst->length == 0)
@@ -172,7 +172,7 @@ Value* primitive_rest(List* arguments)
     Value* arg = arguments->first->value;
 
     if (arg->type != TYPE_LIST)
-	alloc_value(TYPE_ERROR, "expects list");
+	return alloc_value(TYPE_ERROR, "expects list");
     else {
 	List* lst = (List*)arg->data;
 	if (lst->length < 1)
@@ -209,7 +209,7 @@ Value* primitive_apply(List* arguments)
 {
     Value* proc = arguments->first->value;
     Value* list = arguments->last->value;
-    List env = {};
+    List env = {0,};	//shut compiler warning up
     
     if (proc->type != TYPE_PROCEDURE)
 	return alloc_value(TYPE_ERROR, "APPLY expects a procedure as first argument.");

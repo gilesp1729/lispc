@@ -22,7 +22,7 @@ Node* list_nth_node(List* lst, int index)
 void list_delete(List* lst, int index)
 {
     Node* current = lst->first;
-    Node* last;
+    Node* last = NULL;  // shut up compiler warning
     int i;
     if (index == 0)
 	lst->first = current->next;

@@ -26,16 +26,16 @@ Operator operators[] = {
     {"\\", 2, {NO_EVAL, NO_EVAL}, &operator_lambda},
     {"SET!", 2, {NO_EVAL, EVAL}, &operator_set},
     {"LET", 2, {NO_EVAL, NO_EVAL}, &operator_let},
-    {"DO", 0, {}, &operator_prog},
-    {":", 0, {}, &operator_prog},
-    {"COND", 0, {}, &operator_cond},
+    {"DO", 0, {0,}, &operator_prog},	// shut compiler warning up
+    {":", 0, {0,}, &operator_prog},
+    {"COND", 0, {0,}, &operator_cond},
     //{"EVAL", 1, {EVAL}, &operator_eval}
 };
 
 Value* apply_operator(Operator* operator, List* arguments, List* environment)
 {
     Node* current_arg = arguments->first;
-    List evaluated_args = {};
+    List evaluated_args = {0,};		// shut compiler warning up
     if (operator->num_arguments != 0 && operator->num_arguments != arguments->length) 
 	return alloc_value(TYPE_ERROR, "wrong number of arguments for operator");
     for (int i = 0; i < arguments->length; i++) {
@@ -162,7 +162,7 @@ Value* operator_let(List* arguments, List* environment)
 
 Value* operator_prog(List* arguments, List* environment)
 {
-    Value* result;
+    Value* result = NULL;	// shut comiler warning up
     Node* current = arguments->first;
     for (int i = 0; i < arguments->length; i++) { 
 	result = eval(current->value, environment);
@@ -175,7 +175,7 @@ Value* operator_prog(List* arguments, List* environment)
 Value* operator_cond(List* arguments, List* environment)
 {
     Node* current_clause = arguments->first;
-    Value* result;
+    Value* result = NULL;		// shut comiler warning up
 
     for (int i = 0; i < arguments->length; i++) {
 	if (current_clause->value->type != TYPE_LIST)

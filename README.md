@@ -11,6 +11,10 @@ lispc should build out of the box on any system. Using gcc, simply do
 
 Running the resulting executable will start the lispc interpreter. It does not parse files at the moment, and the REPL is very simple.
 
+## Works in progress
+
+* This fork builds using Visual Studio 2019 on Windows.
+
 ## Language
 
 lispc is a minimalistic Lisp language. Expressions in lispc are either symbols, procedures, numbers or lists. Symbols are used as names in variable bindings, or can be used as identifiers for other purposes. A symbol evaluates to the value it is bound to. Numbers and procedures evaluate to themselves. List evaluation follows two basic rules: If the first element is a symbol and the symbol denotes one of the *operators*, evaluation rules for the particular operator is followed. If the first element does not denote one of the operators, the list expression is a function call. Every element in the list is evaluated, and the first element, if resulting in a procedure, is called with the rest of the elements as arguments.
@@ -48,7 +52,7 @@ Example:
     (\ (x y z) (+ x y z))           ; a function which takes three arguments and sums them
     ((\ (x y z) (+ x y z)) 1 2 3)   ; create the described procedure and call it with arguments 1, 2 and 3
 
-#### `def` 
+#### `def`
 
 `(def a b)` introduces a new *variable binding* where the symbol `a` is bound tothe value `b`.
 
@@ -57,7 +61,7 @@ Example:
     (def a 5)                       ; define a to be 5
     (def square (\ (x) (* x x)))    ; set square to be the function which squares its argument
 
-#### `if` 
+#### `if`
 
 `(if test true-exp false-exp)` evaluates `test`. If the result is non-`NIL`, `true-exp` is evaluated. Otherwise, `false-exp` is evaluated. 
 
@@ -89,7 +93,7 @@ Example:
     (let ((x 2) (y 3))
       (+ x y))                ; x and y are only bound in this expression
 
-#### `do` or `:` 
+#### `do` or `:`
 
 `(do exp1 exp2 ...)` evaluates the expressions `exp1`, `exp2`, ... in order, and uses the last evaluated value as its value.
 
@@ -123,5 +127,5 @@ Here, `_+` denotes the built in primitive procedure for adding integers. The sym
 To add a new implementation, for example for a type `matrix`, we can do
 
     (implement '+ add-matrix '(matrix matrix))
-    
+
 Here, the type argument is a list of two elements, meaning that this implementation will take two arguments, both of type `matrix`. The function `add-matrix` must be a function taking at least two such arguments.

@@ -8,7 +8,7 @@
 
 int check_number(char* str) 
 {
-    for (int i = 0; i < strlen(str); i++) {
+    for (unsigned int i = 0; i < strlen(str); i++) {
 	if (strpbrk(str + i, "0123456789") == NULL)
 	    return 0;
     }
@@ -23,7 +23,7 @@ int check_symbol(char* str)
 int strcount(char* str, char c)
 {
     int count = 0;
-    for (int i = 0; i < strlen(str); i++) 
+    for (unsigned int i = 0; i < strlen(str); i++) 
 	if (str[i] == c) count++;
     return count;
 }
@@ -35,7 +35,7 @@ int check_list(char* str)
 
 char* string_uppercase(char* string)
 {
-    for (int i = 0; i < strlen(string); i++) 
+    for (unsigned int i = 0; i < strlen(string); i++) 
 	string[i] = toupper(string[i]);
     return string;
 }
@@ -86,8 +86,9 @@ Value* parse_string(char* string)
 void list_append_parsed_string(List* list, char* string, int start, int end)
 {
     int length = end - start;
-    char* element = (char*)malloc(sizeof(char) * (length + 1));
-    strncpy(element, string + start, length);
+    int eltsize = sizeof(char) * (length + 1);
+    char* element = (char*)malloc(eltsize);
+    strncpy_s(element, eltsize, string + start, length);
     element[length] = 0;
     list_append(list, parse_string(element));
 }
