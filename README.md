@@ -14,6 +14,11 @@ Running the resulting executable will start the lispc interpreter. It does not p
 ## Works in progress
 
 * This fork builds using Visual Studio 2019 on Windows.
+* Make it more like Common Lisp (no guarantee of completeness!)
+  * Other kind sof numbers: float, double, ratios, bignums
+  * Input formats: bin/hex/oct
+  * Arrays and structures
+  * Read and write files, and parse input from files
 
 ## Language
 

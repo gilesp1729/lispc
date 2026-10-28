@@ -19,7 +19,7 @@ Node* list_nth_node(List* lst, int index)
     return current;
 }
 
-void list_delete(List* lst, int index)
+void list_delete(List* lst, int index)				// It's not called
 {
     Node* current = lst->first;
     Node* last = NULL;  // shut up compiler warning
@@ -98,17 +98,17 @@ int list_find(List* list, Value* item)
     return -1;
 }
 
-void list_node_free(Node* node)
+void list_node_free(Node* node)				// Only called by list_delete, which isn't called anywhere
 {
-    free(node->value);
+    free(node->value);					// If value points to data, it isn't freed.
     free(node);
 }
 
-void list_destruct(List* list)
+void list_destruct(List* list)				// It's not called, so doesn't matter, but... it won't work.
 {
     Node* current = list->first;
     for (int i = 0; i < list->length; i++) {
-        list_node_free(current);
+        list_node_free(current);			// TODO: Say what? Current not changing in loop
     }
     free(list);
 }
