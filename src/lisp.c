@@ -6,7 +6,7 @@
 #include "operators.h"
 #include "parser.h"
 
-const char* type_names[] = {"INTEGER", "SYMBOL", "LIST", "PROCEDURE", "BINDING", "ERROR", "OPERATOR"};
+const char* type_names[] = {"NUMERIC", "SYMBOL", "LIST", "PROCEDURE", "BINDING", "ERROR", "OPERATOR"};
 
 int compare_values(Value* a, Value* b) 
 {
@@ -17,7 +17,7 @@ int compare_values(Value* a, Value* b)
     if (a->type == b->type)
 	switch (a->type) {
 	    
-	case TYPE_INTEGER:
+	case TYPE_NUMERIC:
 	    return *(int*)a->data == *(int*)b->data;
 	case TYPE_SYMBOL:
 	    return (strcmp((char*)a->data, (char*)b->data) == 0);
@@ -159,7 +159,7 @@ Value* apply(Procedure* procedure, List* arguments, List* environment)
 Value* eval(Value* expression, List* environment)
 {
     //printf("EVAL: "); value_print(expression); printf("\n");
-    if (expression->type == TYPE_INTEGER || expression->type == TYPE_ERROR || expression->type == TYPE_PROCEDURE) 
+    if (expression->type == TYPE_NUMERIC || expression->type == TYPE_ERROR || expression->type == TYPE_PROCEDURE) 
 	return expression;
     if (expression->type == TYPE_SYMBOL && !strcmp(expression->data, "NIL")) 
 	return expression;

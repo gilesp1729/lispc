@@ -1,4 +1,4 @@
-#define TYPE_INTEGER 0
+#define TYPE_NUMERIC 0
 #define TYPE_SYMBOL 1
 #define TYPE_LIST 2
 #define TYPE_PROCEDURE 3

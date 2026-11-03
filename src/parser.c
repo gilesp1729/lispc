@@ -73,7 +73,7 @@ Value* parse_string(char* string)
 	value = alloc_value(TYPE_LIST, quote_exp);
     }
     else if (check_number(string)) 
-	value = alloc_value(TYPE_INTEGER, allocate_integer(atoi(string)));	
+	value = alloc_value(TYPE_NUMERIC, allocate_integer(atoi(string)));	
     else if (check_symbol(string)) 
 	value = alloc_value(TYPE_SYMBOL, string_uppercase(string));
     else if (check_list(string)) 

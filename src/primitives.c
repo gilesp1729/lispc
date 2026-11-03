@@ -12,7 +12,7 @@
 
 /* Internal declarations */
 Procedure* alloc_primitive_procedure(Value* (*) (List*), int);
-void append_primtive_procedure(List*, char*, int num_args, Value* (*) (List*));
+void append_primitive_procedure(List*, char*, int num_args, Value* (*) (List*));
 Value* primitive_plus(List*);
 Value* primitive_eq(List*);
 Value* primitive_greater(List*);
@@ -79,8 +79,8 @@ Value* apply_arithmetic_primitive(List* arguments, int operation)
 
     int* result = (int*)malloc(sizeof(int));
     for (int i = 0; i < arguments->length; i++) {
-	if (current_argument->value->type != TYPE_INTEGER)
-	    return alloc_value(TYPE_ERROR, "expects integer arguments");
+	if (current_argument->value->type != TYPE_NUMERIC)
+	    return alloc_value(TYPE_ERROR, "expects numeric arguments");
 	if (i == 0) *result = *(int*)current_argument->value->data;
 	else {
 	    if (operation == OPERATION_PLUS) 
@@ -92,7 +92,7 @@ Value* apply_arithmetic_primitive(List* arguments, int operation)
 	}
 	current_argument = current_argument->next;
     }
-    return alloc_value(TYPE_INTEGER, result);
+    return alloc_value(TYPE_NUMERIC, result);
 }
 
 Value* primitive_plus(List* arguments)
@@ -125,8 +125,8 @@ Value* primitive_less(List* arguments)
 {
     Value* a = arguments->first->value;
     Value* b = arguments->last->value;
-    if (a->type != TYPE_INTEGER || b->type != TYPE_INTEGER) 
-	return alloc_value(TYPE_ERROR, "arguments not integers");
+    if (a->type != TYPE_NUMERIC || b->type != TYPE_NUMERIC) 
+	return alloc_value(TYPE_ERROR, "arguments not numbers");
     else
 	return alloc_value(TYPE_SYMBOL, (*(int*)a->data < *(int*)b->data) ? "T" : "NIL"); 
 }
@@ -223,9 +223,9 @@ Value* primitive_mod(List* arguments)
     Value* a = arguments->first->value;
     Value* b = arguments->first->next->value;
 
-    if (a->type != TYPE_INTEGER || b->type != TYPE_INTEGER)
+    if (a->type != TYPE_NUMERIC || b->type != TYPE_NUMERIC)
 	return alloc_value(TYPE_ERROR, "MOD requires numeric arguments");
-    return alloc_value(TYPE_INTEGER, allocate_integer(*(int*)a->data % *(int*)b->data));
+    return alloc_value(TYPE_NUMERIC, allocate_integer(*(int*)a->data % *(int*)b->data));
 }
 
 Value* primitive_print(List* arguments)

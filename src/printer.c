@@ -6,7 +6,7 @@
 void value_print(Value* value)
 {
     switch (value->type) {
-    case TYPE_INTEGER:
+    case TYPE_NUMERIC:
 	printf("%i", *(int*)value->data);
 	break;
     case TYPE_SYMBOL:
