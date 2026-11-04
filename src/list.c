@@ -19,6 +19,7 @@ Node* list_nth_node(List* lst, int index)
     return current;
 }
 
+#if 0
 void list_delete(List* lst, int index)				// It's not called
 {
     Node* current = lst->first;
@@ -38,6 +39,7 @@ void list_delete(List* lst, int index)				// It's not called
     list_node_free(current);
     lst->length--;
 }
+#endif
 
 List* list_copy_omit(List* lst, int index)
 {
@@ -51,7 +53,7 @@ List* list_copy_omit(List* lst, int index)
     return new;
 }
 
-List* list_copy(List* source)
+List* list_copy(List* source)           // Only copies spine of list - does not deep copy.
 {
     List* new = alloc_list();
     Node* current = source->first;
@@ -98,6 +100,7 @@ int list_find(List* list, Value* item)
     return -1;
 }
 
+#if 0
 void list_node_free(Node* node)				// Only called by list_delete, which isn't called anywhere
 {
     free(node->value);					// If value points to data, it isn't freed.
@@ -112,6 +115,7 @@ void list_destruct(List* list)				// It's not called, so doesn't matter, but... 
     }
     free(list);
 }
+#endif
 
 List list_pop(List* list)
 {
