@@ -1,3 +1,8 @@
 /src/.vs/lispc/v16
 /src/Debug
 /src/x64/Debug
+/src/bigint/.vs/bigint/v16
+/src/bigint/Debug
+/src/bigint/x64/Debug
+/src/bigint/x64/Release
+/src/x64/Release

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "lisp.h"
+#include "bigint/bigint.h"
 #include <stdint.h>
 #include "list.h"
 #include "primitives.h"
