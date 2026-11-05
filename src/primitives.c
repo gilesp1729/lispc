@@ -45,8 +45,8 @@ Procedure* alloc_primitive_procedure(Value* (*code) (List*), int num_args)
 
 void append_primitive_procedure(List* env, char* name, int num_args, Value* (*code) (List*))
 {
-    list_append(env, alloc_value(TYPE_BINDING, alloc_binding(alloc_value(TYPE_SYMBOL, name), 
-							   alloc_value(TYPE_PROCEDURE, alloc_primitive_procedure(code, num_args)))));
+    list_append(env, alloc_value(TYPE_BINDING, alloc_binding(alloc_value(TYPE_SYMBOL, name),
+                                                           alloc_value(TYPE_PROCEDURE, alloc_primitive_procedure(code, num_args)))));
 }
 
 List* setup_environment()
@@ -80,18 +80,18 @@ Value* apply_arithmetic_primitive(List* arguments, int operation)
 
     int* result = (int*)malloc(sizeof(int));
     for (int i = 0; i < arguments->length; i++) {
-	if (current_argument->value->type != TYPE_NUMERIC)
-	    return alloc_value(TYPE_ERROR, "expects numeric arguments");
-	if (i == 0) *result = *(int*)current_argument->value->data;
-	else {
-	    if (operation == OPERATION_PLUS) 
-		*result += *(int*)(current_argument->value->data);
-	    if (operation == OPERATION_MINUS) 
-		*result -= *(int*)current_argument->value->data;
-	    if (operation == OPERATION_MULTIPLY) 
-		*result *= *(int*)current_argument->value->data;
-	}
-	current_argument = current_argument->next;
+        if (current_argument->value->type != TYPE_NUMERIC)
+            return alloc_value(TYPE_ERROR, "expects numeric arguments");
+        if (i == 0) *result = *(int*)current_argument->value->data;
+        else {
+            if (operation == OPERATION_PLUS)
+                *result += *(int*)(current_argument->value->data);
+            if (operation == OPERATION_MINUS)
+                *result -= *(int*)current_argument->value->data;
+            if (operation == OPERATION_MULTIPLY)
+                *result *= *(int*)current_argument->value->data;
+        }
+        current_argument = current_argument->next;
     }
     return alloc_value(TYPE_NUMERIC, result);
 }
@@ -111,25 +111,27 @@ Value* primitive_multiply(List* arguments)
     return apply_arithmetic_primitive(arguments, OPERATION_MULTIPLY);
 }
 
+// = takes any number of arguments
 Value* primitive_eq(List* arguments)
 {
     Node* current_argument = arguments->first;
     for (int i = 0; i < arguments->length - 1; i++) {
-	if (!compare_values(current_argument->value, current_argument->next->value))
-	    return alloc_value(TYPE_SYMBOL, (void*)"NIL");
-	current_argument = current_argument->next;
+        if (!compare_values(current_argument->value, current_argument->next->value))
+            return alloc_value(TYPE_SYMBOL, (void*)"NIL");
+        current_argument = current_argument->next;
     }
     return alloc_value(TYPE_SYMBOL, "T");
 }
 
+// Other comparisons always take two arguments
 Value* primitive_less(List* arguments)
 {
     Value* a = arguments->first->value;
     Value* b = arguments->last->value;
-    if (a->type != TYPE_NUMERIC || b->type != TYPE_NUMERIC) 
-	return alloc_value(TYPE_ERROR, "arguments not numbers");
+    if (a->type != TYPE_NUMERIC || b->type != TYPE_NUMERIC)
+        return alloc_value(TYPE_ERROR, "arguments not numbers");
     else
-	return alloc_value(TYPE_SYMBOL, (*(int*)a->data < *(int*)b->data) ? "T" : "NIL"); 
+        return alloc_value(TYPE_SYMBOL, (*(int*)a->data < *(int*)b->data) ? "T" : "NIL");
 }
 
 Value* primitive_greater(List* arguments)
@@ -140,12 +142,22 @@ Value* primitive_greater(List* arguments)
 
 Value* primitive_lesseq(List* arguments)
 {
-  return (Value*)(intptr_t)((intptr_t)primitive_less(arguments) || (intptr_t)primitive_eq(arguments));
+    Value* a = arguments->first->value;
+    Value* b = arguments->last->value;
+    if (a->type != TYPE_NUMERIC || b->type != TYPE_NUMERIC)
+        return alloc_value(TYPE_ERROR, "arguments not numbers");
+    else
+        return alloc_value(TYPE_SYMBOL, (*(int*)a->data <= *(int*)b->data) ? "T" : "NIL");
 }
 
 Value* primitive_greatereq(List* arguments)
 {
-  return (Value*)(intptr_t)((intptr_t)primitive_greater(arguments) || (intptr_t)primitive_eq(arguments));
+    Value* a = arguments->first->value;
+    Value* b = arguments->last->value;
+    if (a->type != TYPE_NUMERIC || b->type != TYPE_NUMERIC)
+        return alloc_value(TYPE_ERROR, "arguments not numbers");
+    else
+        return alloc_value(TYPE_SYMBOL, (*(int*)a->data >= *(int*)b->data) ? "T" : "NIL");
 }
 
 Value* primitive_list(List* arguments)
@@ -158,13 +170,13 @@ Value* primitive_first(List* arguments)
     Value* arg = arguments->first->value;
 
     if (arg->type != TYPE_LIST)
-	return alloc_value(TYPE_ERROR, "expects list");
+        return alloc_value(TYPE_ERROR, "expects list");
     else {
-	List* lst = (List*)arg->data;
-	if (lst->length == 0)
-	    return alloc_value(TYPE_SYMBOL, "NIL");
-	else 
-	    return lst->first->value;
+        List* lst = (List*)arg->data;
+        if (lst->length == 0)
+            return alloc_value(TYPE_SYMBOL, "NIL");
+        else
+            return lst->first->value;
     }
 }
 
@@ -173,18 +185,18 @@ Value* primitive_rest(List* arguments)
     Value* arg = arguments->first->value;
 
     if (arg->type != TYPE_LIST)
-	return alloc_value(TYPE_ERROR, "expects list");
+        return alloc_value(TYPE_ERROR, "expects list");
     else {
-	List* lst = (List*)arg->data;
-	if (lst->length < 1)
-	    return arg;
-	else {
-	    List* rest_lst = alloc_list();
-	    rest_lst->length = lst->length - 1;
-	    rest_lst->first = lst->first->next;
-	    rest_lst->last = lst->last;
-	    return alloc_value(TYPE_LIST, rest_lst);
-	}
+        List* lst = (List*)arg->data;
+        if (lst->length < 1)
+            return arg;
+        else {
+            List* rest_lst = alloc_list();
+            rest_lst->length = lst->length - 1;
+            rest_lst->first = lst->first->next;
+            rest_lst->last = lst->last;
+            return alloc_value(TYPE_LIST, rest_lst);
+        }
     }
 }
 
@@ -192,9 +204,9 @@ Value* primitive_push(List* arguments)
 {
     Value* val = arguments->first->value;
     Value* list = arguments->last->value;
-    
+
     if (list->type != TYPE_LIST)
-	return alloc_value(TYPE_ERROR, "PUSH expects second argument to be a list.");
+        return alloc_value(TYPE_ERROR, "PUSH expects second argument to be a list.");
     List* new_list = alloc_list();
     List* old_lst = (List*)list->data;
     Node* first_node = (Node*)malloc(sizeof(Node));
@@ -210,13 +222,13 @@ Value* primitive_apply(List* arguments)
 {
     Value* proc = arguments->first->value;
     Value* list = arguments->last->value;
-    List env = {0,};	//shut compiler warning up
-    
+    List env = {0,};    //shut compiler warning up
+
     if (proc->type != TYPE_PROCEDURE)
-	return alloc_value(TYPE_ERROR, "APPLY expects a procedure as first argument.");
+        return alloc_value(TYPE_ERROR, "APPLY expects a procedure as first argument.");
     if (list->type != TYPE_LIST)
-	return alloc_value(TYPE_ERROR, "APPLY expects list as second argument.");
-    return apply((Procedure*)proc->data, (List*)list->data, &env); 
+        return alloc_value(TYPE_ERROR, "APPLY expects list as second argument.");
+    return apply((Procedure*)proc->data, (List*)list->data, &env);
 }
 
 Value* primitive_mod(List* arguments)
@@ -225,7 +237,7 @@ Value* primitive_mod(List* arguments)
     Value* b = arguments->first->next->value;
 
     if (a->type != TYPE_NUMERIC || b->type != TYPE_NUMERIC)
-	return alloc_value(TYPE_ERROR, "MOD requires numeric arguments");
+        return alloc_value(TYPE_ERROR, "MOD requires numeric arguments");
     return alloc_value(TYPE_NUMERIC, allocate_integer(*(int*)a->data % *(int*)b->data));
 }
 

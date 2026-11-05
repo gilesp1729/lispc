@@ -48,9 +48,9 @@ typedef struct {
     int num_arguments;
     char argument_flags[3];
     Value* (*function) (List*, List*);
-} Operator;
+}  Operator;
 
-int compare_values(Value*, Value*); 
+int compare_values(Value*, Value*);
 Value* environment_lookup(List*, char*);
 Value* alloc_value(int, void*);
 Binding* alloc_binding(Value*, Value*);

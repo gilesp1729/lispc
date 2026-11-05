@@ -2,7 +2,7 @@
 #include "lisp.h"
 #include "list.h"
 
-List* alloc_list() 
+List* alloc_list()
 {
     List* list = (List*)malloc(sizeof(List));
     list->length = 0;
@@ -15,27 +15,27 @@ Node* list_nth_node(List* lst, int index)
 {
     Node* current = lst->first;
     for (int i = 0; i < index; i++)
-	current = current->next;
+        current = current->next;
     return current;
 }
 
 #if 0
-void list_delete(List* lst, int index)				// It's not called
+void list_delete(List* lst, int index)                          // It's not called
 {
     Node* current = lst->first;
     Node* last = NULL;  // shut up compiler warning
     int i;
     if (index == 0)
-	lst->first = current->next;
+        lst->first = current->next;
     else {
-	for (i = 0; i < index; i++) {
-	    last = current;
-	    current = current->next;
-	}
-	last->next = current->next;
+        for (i = 0; i < index; i++) {
+            last = current;
+            current = current->next;
+        }
+        last->next = current->next;
     }
     if (i == lst->length - 1)
-	lst->last = last;
+        lst->last = last;
     list_node_free(current);
     lst->length--;
 }
@@ -46,9 +46,9 @@ List* list_copy_omit(List* lst, int index)
     List* new = alloc_list();
     Node* current = lst->first;
     for (int i = 0; i < lst->length; i++) {
-	if (i != index) 
-	    list_append(new, current->value);
-	current = current->next;
+        if (i != index)
+            list_append(new, current->value);
+        current = current->next;
     }
     return new;
 }
@@ -57,20 +57,20 @@ List* list_copy(List* source)           // Only copies spine of list - does not 
 {
     List* new = alloc_list();
     Node* current = source->first;
-    for (int i = 0; i < source->length; i++) { 
-	list_append(new, current->value);
-	current = current->next;
+    for (int i = 0; i < source->length; i++) {
+        list_append(new, current->value);
+        current = current->next;
     }
     return new;
 }
 
-void list_copy_new(List* dest, List* source) 
+void list_copy_new(List* dest, List* source)
 {
     Node* current = source->first;
     for (int i = 0; i < source->length; i++) {
-	if (list_find(dest, current->value) == -1)
-	    list_append(dest, current->value);
-	current = current->next;
+        if (list_find(dest, current->value) == -1)
+            list_append(dest, current->value);
+        current = current->next;
     }
 }
 
@@ -81,10 +81,10 @@ void list_append(List* list, Value* new_item)
     new->value->type = new_item->type;
     new->value->data = new_item->data;
     new->next = NULL;
-    if (list->length == 0) 
-	list->first = new;
+    if (list->length == 0)
+        list->first = new;
     else
-	list->last->next = new;
+        list->last->next = new;
     list->last = new;
     list->length++;
 }
@@ -94,24 +94,24 @@ int list_find(List* list, Value* item)
     if (list->length == 0) return -1;
     Node* current = list->first;
     for (int i = 0; i < list->length; i++) {
-	if (compare_values(current->value, item)) return i;
-	current = current->next;
+        if (compare_values(current->value, item)) return i;
+        current = current->next;
     }
     return -1;
 }
 
 #if 0
-void list_node_free(Node* node)				// Only called by list_delete, which isn't called anywhere
+void list_node_free(Node* node)                         // Only called by list_delete, which isn't called anywhere
 {
-    free(node->value);					// If value points to data, it isn't freed.
+    free(node->value);                                  // If value points to data, it isn't freed.
     free(node);
 }
 
-void list_destruct(List* list)				// It's not called, so doesn't matter, but... it won't work.
+void list_destruct(List* list)                          // It's not called, so doesn't matter, but... it won't work.
 {
     Node* current = list->first;
     for (int i = 0; i < list->length; i++) {
-        list_node_free(current);			// TODO: Say what? Current not changing in loop
+        list_node_free(current);                        // TODO: Say what? Current not changing in loop
     }
     free(list);
 }
@@ -120,9 +120,9 @@ void list_destruct(List* list)				// It's not called, so doesn't matter, but... 
 List list_pop(List* list)
 {
     List new_head = {
-	list->length - 1,
-	list->first->next,
-	list->last
+        list->length - 1,
+        list->first->next,
+        list->last
     };
     return new_head;
 }
