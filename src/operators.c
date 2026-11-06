@@ -17,6 +17,7 @@ Value* operator_lambda(List*, List*);
 Value* operator_let(List*, List*);
 Value* operator_prog(List*, List*);
 Value* operator_cond(List*, List*);
+Value* operator_env(List*, List*);
 Value* operator_eval(List*, List*);
 
 Operator operators[] = {
@@ -29,6 +30,7 @@ Operator operators[] = {
     {"DO", 0, {0,}, &operator_prog},    // shut compiler warning up
     {":", 0, {0,}, &operator_prog},
     {"COND", 0, {0,}, &operator_cond},
+    {"ENV", 0, {0,}, &operator_env},
     //{"EVAL", 1, {EVAL}, &operator_eval}
 };
 
@@ -67,6 +69,17 @@ Value* operator_quote(List* arguments, List* environment)
 {
     return arguments->first->value;
 }
+
+// This is just a debugging aid.
+Value* operator_env(List* arguments, List* environment)
+{
+    //return alloc_value(TYPE_LIST, list_copy(environment));    // no need to copy, results are not deleted (yet)
+    return alloc_value(TYPE_LIST, environment);
+}
+
+// TODO: This will not overwrite an existing definition (sine it appends at the end of the env)
+// Fix this so it removes an existing defn first (or prepends at the front)
+// Watch out for memory leaks as the env just gets longer and longer
 
 Value* operator_define(List* arguments, List* environment)
 {

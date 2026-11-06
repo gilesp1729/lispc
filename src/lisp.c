@@ -113,6 +113,8 @@ Procedure* alloc_procedure(List* variables, Value* code, List* parent_environmen
 
 Value* apply(Procedure* procedure, List* arguments, List* environment)
 {
+    Value* ret_val;
+
     // If procedure is a LAMBDA or PRIMITIVE, argument and variable list lengths must agree
     if (procedure->type == PROCEDURE_LAMBDA || (procedure->type == PROCEDURE_PRIMITIVE && procedure->free_variables->length != 0))
         if (procedure->free_variables->length != arguments->length)
@@ -153,7 +155,11 @@ Value* apply(Procedure* procedure, List* arguments, List* environment)
     list_copy_new(new_environment, environment);
 
     // Finally, evaluate the procedure
-    return eval(procedure->code, new_environment);
+    ret_val = eval(procedure->code, new_environment);
+
+    // clean up and return the result
+    list_delete(new_environment);
+    return ret_val;
 }
 
 Value* eval(Value* expression, List* environment)
@@ -232,8 +238,13 @@ void test_repl()
         expression[strlen(expression) - 1] = 0;
         strip_spaces(expression);
         result = eval(parse_string(expression), env);
-        value_print(result);
+        value_print(result); 
         printf("\n");
+        // TODO free numerics here too
+#if 0
+        if (result->type == TYPE_LIST)
+            list_delete(result->data);  // BAd - when eval returns a list it can be deleted twice
+#endif
     }
 }
 

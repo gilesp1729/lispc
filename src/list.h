@@ -1,7 +1,8 @@
 
 List* alloc_list();
 Node* list_nth_node(List*, int);
-void list_delete(List*, int);
+void list_remove(List*, int);
+void list_delete(List*);
 List* list_copy(List*);
 List* list_copy_omit(List*, int);
 void list_copy_new(List*, List*);

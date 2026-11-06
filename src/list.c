@@ -19,8 +19,14 @@ Node* list_nth_node(List* lst, int index)
     return current;
 }
 
-#if 0
-void list_delete(List* lst, int index)                          // It's not called
+void list_node_free(Node* node)
+{
+    free(node->value);                                  // If value points to data, it isn't freed.
+    free(node);
+}
+
+// Remove one element from a list. Not used (atm)
+void list_remove(List* lst, int index) 
 {
     Node* current = lst->first;
     Node* last = NULL;  // shut up compiler warning
@@ -39,7 +45,21 @@ void list_delete(List* lst, int index)                          // It's not call
     list_node_free(current);
     lst->length--;
 }
-#endif
+
+// Free a list and its nodes. 
+// - Only frees the spine of the list.
+// - Data pointed to by Values are not freed.
+void list_delete(List* list)
+{
+    Node* current = list->first;
+    for (int i = 0; i < list->length; i++) {
+        Node* next = current->next;
+        list_node_free(current);  
+        current = next;
+    }
+    free(list);
+}
+
 
 List* list_copy_omit(List* lst, int index)
 {
@@ -64,6 +84,7 @@ List* list_copy(List* source)           // Only copies spine of list - does not 
     return new;
 }
 
+// Copy items from src to dest, skipping duplicates. Only used for environments.
 void list_copy_new(List* dest, List* source)
 {
     Node* current = source->first;
@@ -99,23 +120,6 @@ int list_find(List* list, Value* item)
     }
     return -1;
 }
-
-#if 0
-void list_node_free(Node* node)                         // Only called by list_delete, which isn't called anywhere
-{
-    free(node->value);                                  // If value points to data, it isn't freed.
-    free(node);
-}
-
-void list_destruct(List* list)                          // It's not called, so doesn't matter, but... it won't work.
-{
-    Node* current = list->first;
-    for (int i = 0; i < list->length; i++) {
-        list_node_free(current);                        // TODO: Say what? Current not changing in loop
-    }
-    free(list);
-}
-#endif
 
 List list_pop(List* list)
 {
