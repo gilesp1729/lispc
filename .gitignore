@@ -6,3 +6,12 @@
 /src/bigint/x64/Debug
 /src/bigint/x64/Release
 /src/x64/Release
+/src/Debug Library
+/src/Release Library
+/src/Release
+/src/bigint/Debug Library
+/src/bigint/Release Library
+/src/bigint/x64/Debug Library
+/src/bigint/x64/Release Library
+/src/x64/Debug Library
+/src/x64/Release Library
